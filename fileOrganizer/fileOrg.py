@@ -6,6 +6,10 @@ from subprocess import PIPE, run
 
 def findFilesOfType(type, source): 
     file_paths = []
+    if os.path.isdir("{}\\{}".format(source, type)) == False: #checks if a folder of name "type" exists; 
+        os.makedirs("{}".format(type))
+        print(os.listdir(source))
+        pass
 
     for root, dirs, files in os.walk(source): 
         for directory in dirs: 
@@ -14,9 +18,6 @@ def findFilesOfType(type, source):
                 file_paths.append(curPath) 
         break 
     return file_paths
-
-def createFileFolder(source, file_paths): 
-    pass
 
 def main(source, fileType): 
     cwd = os.getcwd()
@@ -30,7 +31,7 @@ def main(source, fileType):
 if __name__ == "__main__": 
     args = sys.argv
     print(args)
-    if len(args) > 3: 
+    if len(args) != 3: 
         raise Exception("Only pass a source directory and desired file type to be sorted")
     
     source, fileType = args[1:]
