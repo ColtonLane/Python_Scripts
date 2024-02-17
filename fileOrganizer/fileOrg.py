@@ -1,8 +1,11 @@
-import sys #used to read cmd arguments
+import sys #used to read cmd argumentsfilesMoved
 import os #used to avoid inconsistency in different OS's path syntax and to obtain CWD
-import json
 import shutil
-from subprocess import PIPE, run
+
+global filesMoved 
+filesMoved = 0
+global foldersMade
+foldersMade = 0
 
 def findFilesOfType(type, source): 
     fileList = []
@@ -15,30 +18,42 @@ def findFilesOfType(type, source):
     return fileList 
 
 def addToFolder(fileList, type, source): 
+    global filesMoved, foldersMade
     folderPath = os.path.join("{}\\{}".format(source, type))
     if os.path.isdir(folderPath) == False: #checks if a folder of name "type" exists; 
         os.makedirs(folderPath)
-    for i in fileList: 
-        shutil.move(i, folderPath)
-    if len(os.listdir(folderPath)) == 0: 
-        shutil.rmtree(folderPath)
+        foldersMade += 1
+
+    for file in fileList: 
+        filePath = os.path.join("{}\\{}".format(folderPath, os.path.basename(file))) #creates filePath to check if file exists in folder
+        if os.path.isfile(filePath) == False: #checks is file of the same name exists; if not, adds file to folder
+            shutil.move(file, folderPath)
+            filesMoved += 1
 
 def findAllFileTypes(source): 
-    typeList = ["png", "jpg", "gif", "svg", "tiff", "tif", "docx", "doc", "html", "xlsx", "ppxt", "mp4", "avi", "MOV", "flv", "avchd", 
-                "pptx", "odp", "key", "m4a", "mp3", "wav", "exe", "bat", "rtf", "aseprite", "jpeg", "txt", "pdf", "py", "java", "css", 
-                "cs", "cpp", "iso", "aseprite-extension", "z64", "7z", "json", "zip", "sf2", "ipynb", "lss", "msi", "webp"]
-    for i in typeList: 
-        addToFolder(findFilesOfType(i, source), i, source)
+    typeList = []
+    for root, dirs, files, in os.walk(source): 
+        for file in files: 
+            curFType = file[file.rfind(".")+1::]
+            if curFType not in typeList: 
+                typeList.append(curFType)
+        break
+    print("Organizing files of type(s): {}".format(typeList))
+
+    for type in typeList: 
+         addToFolder(findFilesOfType(type, source), type, source)
 
 def main(source, fileType): 
-    cwd = os.getcwd()
-    source_path = os.path.join(cwd, source)
+    source_path = os.path.join(os.getcwd(), source)
+    print("\n")
     fileType.replace(".", "")
 
     if (fileType == "ALL"): 
         findAllFileTypes(source)
     else: 
         addToFolder(findFilesOfType(fileType, source_path), fileType, source)
+
+    print("Created {} folders \nMoved {} files".format(foldersMade, filesMoved))
 
 
 if __name__ == "__main__": 
