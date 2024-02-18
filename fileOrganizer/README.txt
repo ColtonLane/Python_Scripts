@@ -7,14 +7,14 @@ Description:
 Finds all files of a given type within a given directory and organizes them into one folder. Can also organize all files by checking the present file types, then organizing those into respective folders. Input details below. 
 
 Input:
-When running from terminal, change your directory to that of the script's location. Then input "python fileOrg.py", the desired directory, and then the file type (i.e. "python fileOrg.py C:\Users\Name\Pictures png"). What is read by the script itself starts after the 'python' call, so 3, space-separated strings are expected by the program. It uses the last two of these strings as the target directory and file type, respectively. 
+When running from terminal, change your directory to that of the script's location. Then input "python fileOrg.py", the desired directory, and then the file type(s) (i.e. "python fileOrg.py C:\Users\Name\Pictures png"). The script is looking for at least 3 cmd arguments, so after the 'python' call, it's looking for 'fileOrg.py', the target directory, and then the file type(s) being searched for. 
 
-To organize all files in the given directory, input 'ALL'. For a specific file type, just input that file extension (either with or without a period, the script handles that internally). 
+For multiple file types, input your extensions after the target directory in a list separated by spaces (i.e. "python fileOrg.py C:\Users\Name\Pictures png jpg mp4" or ""python fileOrg.py C:\Users\Name\Pictures png, jpg, mp4"
 
-NOTE: I may add a way to give multiple file types, but that is TBD at present. It would likely be a simple implementation, but the current script works fine for my use-cases, but I am willing to add this, if desired. 
+To organize all files in the given directory, input 'ALL'. For a specific file type, just input that file extension (either with or without a period, the script handles that internally).  
 
 Runtime: 
-While running the script, the terminal should give appropriate feedback about what is done in the target location. It will tell you how many files were moved and how many folders were created. 
+While running the script, the terminal should give appropriate feedback about what is done in the target location. It will tell you how many files were moved and how many folders were created. If input is wrong in some way, it will tell you accordingly or it will say that no files were moved. 
 
 NOTE: Folders of the given file type(s) name WILL NOT be deleted by the program. It makes sure to check for these while organizing. So if you want to sort PDFs and already have a folder titled "pdf", the script will just add PDFs to the existing folder. 
 
