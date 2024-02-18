@@ -1,6 +1,6 @@
-import sys #used to read cmd argumentsfilesMoved
-import os #used to avoid inconsistency in different OS's path syntax and to obtain CWD
-import shutil
+import sys #used to read cmd arguments
+import os #used to obtain CWD, directory and file paths, and for creating new paths within working directory
+import shutil #used for file moving (shutil.move())
 
 global filesMoved 
 filesMoved = 0
@@ -9,13 +9,13 @@ foldersMade = 0
 
 def findFilesOfType(type, source): 
     fileList = []
-    for root, dirs, files in os.walk(source): 
+    for root, dirs, files in os.walk(source): #goes through each file in 'source' directory
         for file in files: 
             if file.endswith(".{}".format(type)) or file.endswith(".{}".format(type.upper())) or file.endswith(".{}".format(type.lower())): #checks if string ends in "." followed by specified path (avoids replacing none-type periods by mistake)
                 curPath = os.path.join(source, file) #combines source directory and files ending in given type
                 fileList.append(curPath)
         break 
-    return fileList 
+    return fileList #list of all files of the given 'type' 
 
 def addToFolder(fileList, type, source): 
     global filesMoved, foldersMade
@@ -34,7 +34,7 @@ def findAllFileTypes(source):
     typeList = []
     for root, dirs, files, in os.walk(source): 
         for file in files: 
-            curFType = file[file.rfind(".")+1::]
+            curFType = file[file.rfind(".")+1::] #finds file type by checking from the file path's last period through the end (just the extension name)
             if curFType not in typeList: 
                 typeList.append(curFType)
         break
@@ -53,8 +53,10 @@ def main(source, fileType):
     else: 
         addToFolder(findFilesOfType(fileType, source_path), fileType, source)
 
-    print("Created {} folders \nMoved {} files".format(foldersMade, filesMoved))
-
+    if (foldersMade > 0 or filesMoved > 0): 
+        print("Created {} folders \nMoved {} files".format(foldersMade, filesMoved))
+    else: 
+        print("No files of type '{}' found".format(fileType))
 
 if __name__ == "__main__": 
     args = sys.argv
@@ -64,3 +66,4 @@ if __name__ == "__main__":
     
     source, fileType = args[1:]
     main(source, fileType)
+    #nice
